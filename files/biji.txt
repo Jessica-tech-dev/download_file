@@ -1,0 +1,89 @@
+查看应用包名：adb shell dumpsys window | grep mCurrentFocus
+查看应用包名：adb shell dumpsys activity | grep -i resumed
+查看系统容器版本号：adb shell dumpsys package com.obric.appletapp | grep -E "versionName|versionCode"
+获取versioncode：adb shell dumpsys package 包名 | grep -E "versionName|versionCode"
+
+清空日历数据库：adb shell pm clear com.android.providers.calendar
+
+启动应用：adb shell am start -n +包名|页面
+导出图片的路径：adb pull /sdcard/Pictures/
+设置手机电量命令：
+adb shell dumpsys battery unplug
+adb shell dumpsys battery set level 90   取决于当前的电量状态
+adb shell dumpsys battery set level 60
+adb shell dumpsys battery reset
+清除指南针数据：adb shell pm clear com.obric.compass
+清除浏览器断网同步：
+adb shell pm clear com.obric.cloudservice
+改变手机管理内存满了弹出消息的时间间隔的命令：
+adb shell setprop persist.memlow.interval 300000
+唤出通知：
+adb shell am broadcast -a com.smartisanos.securitycenter.StorageNotificationReceiver
+天气经纬度：
+adb shell content call --uri content://com.obric.providers.weather.debug --method call_mock_location --arg 119.42,41.37
+刷完user版本后想将机器root，可以使用如下两种方式：
+设备进fastboot模式并已解锁: adb reboot bootloader
+执行：fastboot flash vendor_boot vendor_boot-debug.img
+重启后即可 adb root 尽情使用
+覆盖安装下载服务：
+adb root 
+adb remount
+adb push apk包路径  /system/priv-app/ObricDownloader
+adb shell stop
+adb shell start
+命令跳过开机向导： adb shell am start -n com.android.provision/com.android.provision.CompletedActivity
+模拟手机温度：
+adb shell
+1. 找到virtual-sensor-skin 这个温度节点：
+cd /sys/class/thermal/
+for i in thermal_zone*;do echo $i;cat $i/{'type','temp'};echo "----";done | grep virtual-sensor-skin -A 3 -B 3
+例如：thermal_zone64
+thermal_zone62 // 这个就是对应的路径
+virtual-sensor-skin
+30605
+
+2. 进入上面搜到的 virtual-sensor-skin 对应的目录
+cd thermal_zone62 //对应上面找到的路径
+# 读取温度
+cat temp
+#echo 50000 > emul_temp // 模拟50度高温，触发限制策略
+
+TESTIDE 自动化输入inter
+self.device.shell_command("input keyevent 66")
+ 下载服务暂停重启：
+adb shell am force-stop com.obric.downloadserver
+adb shell am force-stop 杀掉下载服务 
+指南针：
+禁止弹窗：adb shell settings put system calibration_dialog_allowed 0
+允许弹窗：adb shell settings put system calibration_dialog_allowed 1
+查看是否允许弹窗（空和1为允许，0为禁止）：adb shell settings get system calibration_dialog_allowed
+设置权限弹窗：
+adb shell pm clear com.android.settings
+暗色/浅色模式
+adb root
+adb shell "su 0 cmd uimode night yes" 暗黑 
+adb shell "su 0 cmd uimode night no"  非暗黑
+
+设置内存命令：
+adb shell
+dd if=/dev/zero of=/sdcard/test3 bs=1024M count=30     30个1024MB
+
+
+安装软件时提示forbid：
+root后运行如下指令后重启手机
+adb shell setprop persist.sys.forbid_install false
+
+mac电脑使用edl模式刷机： 在刷机包目录执行 ./qdl-flash.sh
+
+
+
+小Q进入应用的脚本，加这个代码：
+import logging
+import time
+logger = logging.getLogger(__name__)
+
+
+
+深色模式：adb shell cmd uimode night yes/no
+字体大小：adb shell settings put system font_scale 1.25（1.25是超大，1.025是大，1是标准，小是0.875）
+
