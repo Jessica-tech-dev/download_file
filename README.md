@@ -3,8 +3,7 @@
 一个用于收纳、预览和下载测试文件的静态网页，支持按文件扩展名管理文档与图片，方便在测试不同文件类型上传、下载、预览能力时快速取用样例文件。
 
 在线访问地址：
-
-https://jessica-tech-dev.github.io/upload_file/
+https://jessica-tech-dev.github.io/download_file/
 
 ## 功能特性
 
